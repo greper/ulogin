@@ -88,9 +88,9 @@ export const useUserStore = defineStore({
       }
     },
     async getUserInfoAction(): Promise<UserInfoRes> {
-      const userInfo = await UserApi.mine();
-      this.setUserInfo(userInfo);
-      return userInfo;
+      const userInfoRes = await UserApi.mine();
+      this.setUserInfo(userInfoRes.userInfo);
+      return userInfoRes.userInfo;
     },
 
     async loadUserInfo() {

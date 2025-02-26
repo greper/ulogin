@@ -158,7 +158,7 @@ const siteInfo = computed(() => {
 });
 
 onMounted(async () => {
-  await settingStore.checkUrlBound();
+  // await settingStore.checkUrlBound();
 });
 
 function menuClick(menu: any) {

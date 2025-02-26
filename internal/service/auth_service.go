@@ -28,10 +28,14 @@ type LoginByPasswordIn struct {
 }
 
 type JwtClaims struct {
+	*LoginUser
+	jwt.RegisteredClaims
+}
+
+type LoginUser struct {
 	UserId   int64
 	RoleIds  []int64
 	UserType int64 // 1 = admin,2 = user
-	jwt.RegisteredClaims
 }
 
 type JwtToken struct {
@@ -109,16 +113,18 @@ func (s *AuthService) BuildLoginReply(ctx context.Context, user *entity.User) (o
 		return nil, err
 	}
 	now := time.Now()
-	expireAt := now.Add(time.Duration(jwtSetting.TokenExpires) * time.Hour)
+	expireAt := now.Add(time.Duration(jwtSetting.TokenExpires) * time.Second)
 
 	claims := JwtClaims{
-		UserId:   user.Id,
-		UserType: user.UserType,
+		LoginUser: &LoginUser{
+			UserId:   user.Id,
+			UserType: user.UserType,
+		},
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(now),
 			NotBefore: jwt.NewNumericDate(now.Add(-time.Duration(1000) * time.Second)), // 签名生效时间
 			ExpiresAt: jwt.NewNumericDate(expireAt),                                    // 过期时间 7天  配置文件
-			Issuer:    "greper@ulogin",                                                 // 签名的发行者
+			Issuer:    "ulogin",                                                        // 签名的发行者
 		},
 	}
 
@@ -133,4 +139,12 @@ func (s *AuthService) BuildLoginReply(ctx context.Context, user *entity.User) (o
 		AccessToken: accessToken,
 		Expires:     expireAt.Unix(),
 	}, nil
+}
+
+func GetLoginUser(ctx context.Context) *LoginUser {
+	loginUser := ctx.Value("LoginUser")
+	if loginUser == nil {
+		glog.Panic(ctx, "您还未登录")
+	}
+	return loginUser.(*LoginUser)
 }

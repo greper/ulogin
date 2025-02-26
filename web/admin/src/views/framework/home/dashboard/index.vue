@@ -140,8 +140,8 @@ const hasNewVersion = computed(() => {
   return true;
 });
 async function loadLatestVersion() {
-  latestVersion.value = await api.GetLatestVersion();
-  console.log("latestVersion", latestVersion.value);
+  // latestVersion.value = await api.GetLatestVersion();
+  // console.log("latestVersion", latestVersion.value);
 }
 const settingStore = useSettingStore();
 const siteInfo: Ref<SiteInfo> = computed(() => {

@@ -21,13 +21,16 @@ export interface SmsLoginReq {
   randomStr: string;
 }
 
-export interface UserInfoRes {
+export interface UserInfo{
   id: string | number;
   username: string;
   nickName: string;
   avatar: string;
   roleIds: number[];
   isWeak?: boolean;
+}
+export interface UserInfoRes {
+  userInfo: UserInfo
 }
 
 export interface LoginRes {

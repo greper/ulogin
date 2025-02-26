@@ -1,19 +1,18 @@
-package utility
+package boot
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
-func DbUp() {
-	var ctx = gctx.New()
+func DbUp(ctx context.Context) {
 	value, err := g.Cfg().GetWithEnv(ctx, "database.default")
 	if err != nil {
 		panic(err)
